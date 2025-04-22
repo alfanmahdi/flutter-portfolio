@@ -84,9 +84,16 @@ class _HomePageState extends State<HomePage> {
 
         return ListTile(
           onTap: () => BookPage(),
+
           // leading:
           // book.imageURL != null &&,
-          title: Text(book.title),
+          title: Row(
+            children: [
+              CircleAvatar(backgroundImage: NetworkImage(book.imageURL)),
+              SizedBox(width: 10),
+              Text(book.title),
+            ],
+          ),
           trailing: Wrap(
             spacing: 12,
             children: [
@@ -180,15 +187,15 @@ class _HomePageState extends State<HomePage> {
                       isEdit
                             ? book.copyWith(
                               title: titleController.text.trim(),
-                              story: 'something',
-                              imageURL: 'something',
+                              story: storyController.text.trim(),
+                              imageURL: imageURLController.text.trim(),
                               authorId: selectedAuthorId,
                               id: book.id,
                             )
                             : Book()
                         ..title = titleController.text.trim()
-                        ..story = 'something'
-                        ..imageURL = 'something'
+                        ..story = storyController.text.trim()
+                        ..imageURL = imageURLController.text.trim()
                         ..authorId = selectedAuthorId;
                   Navigator.of(context).pop(newBook);
                 }
