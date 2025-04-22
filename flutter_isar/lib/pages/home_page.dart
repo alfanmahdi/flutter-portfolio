@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_isar/models/enums.dart';
 import 'package:flutter_isar/models/todo.dart';
