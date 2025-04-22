@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:practice_ets/models/artist.dart';
