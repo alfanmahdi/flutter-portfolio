@@ -1,6 +1,7 @@
 import 'package:firebase_notif/screens/home.dart';
 import 'package:firebase_notif/screens/login.dart';
 import 'package:firebase_notif/screens/register.dart';
+import 'package:firebase_notif/screens/second.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -14,6 +15,8 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,7 +25,9 @@ class MyApp extends StatelessWidget {
         'home': (context) => const HomeScreen(),
         'login': (context) => const LoginScreen(),
         'register': (context) => const RegisterScreen(),
+        'second': (context) => const SecondScreen(),
       },
+      navigatorKey: navigatorKey,
     );
   }
 }
