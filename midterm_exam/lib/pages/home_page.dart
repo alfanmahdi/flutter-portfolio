@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:midterm_exam/models/author.dart';
 import 'package:midterm_exam/models/book.dart';
+import 'package:midterm_exam/pages/author_page.dart';
 import 'package:midterm_exam/pages/book_page.dart';
 import 'package:midterm_exam/services/db_service.dart';
 
@@ -50,6 +51,7 @@ class _HomePageState extends State<HomePage> {
             ..title = "Aku Gesang"
             ..story = "Aku hanya mahasiswa"
             ..imageURL = ""
+            ..year = "Fiction"
             ..authorId = author.id;
 
       await DBService.db.writeTxn(() async {
@@ -66,6 +68,17 @@ class _HomePageState extends State<HomePage> {
           "StoryBase",
           style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AuthorsPage()),
+              );
+            },
+            child: const Text("Author", style: TextStyle(color: Colors.black)),
+          ),
+        ],
         backgroundColor: Colors.yellow,
       ),
       body: SafeArea(child: SizedBox.expand(child: _buildUI())),
@@ -84,14 +97,15 @@ class _HomePageState extends State<HomePage> {
 
         return ListTile(
           onTap: () => BookPage(),
-
-          // leading:
-          // book.imageURL != null &&,
           title: Row(
             children: [
               CircleAvatar(backgroundImage: NetworkImage(book.imageURL)),
               SizedBox(width: 10),
               Text(book.title),
+              Text(
+                " Release: ${book.year}",
+                style: TextStyle(color: Colors.grey),
+              ),
             ],
           ),
           trailing: Wrap(
@@ -123,6 +137,7 @@ class _HomePageState extends State<HomePage> {
     final imageURLController = TextEditingController(
       text: book?.imageURL ?? '',
     );
+    final yearController = TextEditingController(text: book?.year ?? '');
 
     final authors = await DBService.db.authors.where().findAll();
 
@@ -159,6 +174,11 @@ class _HomePageState extends State<HomePage> {
                 decoration: const InputDecoration(labelText: "Image URL"),
               ),
               const SizedBox(height: 16),
+              TextField(
+                controller: yearController,
+                decoration: const InputDecoration(labelText: "Year"),
+              ),
+              const SizedBox(height: 16),
               DropdownButtonFormField<int>(
                 value: selectedAuthorId,
                 decoration: const InputDecoration(labelText: "Author"),
@@ -189,6 +209,7 @@ class _HomePageState extends State<HomePage> {
                               title: titleController.text.trim(),
                               story: storyController.text.trim(),
                               imageURL: imageURLController.text.trim(),
+                              year: yearController.text.trim(),
                               authorId: selectedAuthorId,
                               id: book.id,
                             )
@@ -196,6 +217,7 @@ class _HomePageState extends State<HomePage> {
                         ..title = titleController.text.trim()
                         ..story = storyController.text.trim()
                         ..imageURL = imageURLController.text.trim()
+                        ..year = yearController.text.trim()
                         ..authorId = selectedAuthorId;
                   Navigator.of(context).pop(newBook);
                 }

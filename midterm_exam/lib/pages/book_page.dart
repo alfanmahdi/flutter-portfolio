@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart';
 
 class BookPage extends StatefulWidget {
   const BookPage({super.key});

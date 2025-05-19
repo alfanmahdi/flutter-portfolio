@@ -9,6 +9,7 @@ class Book {
   late String title;
   late String story;
   late String imageURL;
+  late String year;
   late int authorId;
 
   Book copyWith({
@@ -16,6 +17,7 @@ class Book {
     String? title,
     String? story,
     String? imageURL,
+    String? year,
     int? authorId,
   }) {
     return Book()
@@ -23,6 +25,7 @@ class Book {
       ..title = title ?? this.title
       ..story = story ?? this.story
       ..imageURL = imageURL ?? this.imageURL
+      ..year = year ?? this.year
       ..authorId = authorId ?? this.authorId;
   }
 }

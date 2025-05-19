@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:midterm_exam/models/author.dart';
 import 'package:midterm_exam/services/db_service.dart';
 
-class ArtistsPage extends StatefulWidget {
-  const ArtistsPage({super.key});
+class AuthorsPage extends StatefulWidget {
+  const AuthorsPage({super.key});
 
   @override
-  State<ArtistsPage> createState() => _ArtistsPageState();
+  State<AuthorsPage> createState() => _AuthorsPageState();
 }
 
-class _ArtistsPageState extends State<ArtistsPage> {
+class _AuthorsPageState extends State<AuthorsPage> {
   List<Author> authors = [];
   StreamSubscription? authorsStream;
 
@@ -59,16 +59,21 @@ class _ArtistsPageState extends State<ArtistsPage> {
           leading: const Icon(Icons.person),
           title: GestureDetector(
             onTap:
-                () => _addOrEditAuthors(authors: author), // Edit saat tap nama
+                () => _addOrEditAuthors(author: author), // Edit saat tap nama
             child: Text(author.name),
           ),
-          trailing: IconButton(
-            icon: const Icon(Icons.delete, color: Colors.red),
-            onPressed: () async {
-              await DBService.db.writeTxn(() async {
-                await DBService.db.authors.delete(author.id);
-              });
-            },
+          trailing: Wrap(
+            spacing: 12,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red),
+                onPressed: () async {
+                  await DBService.db.writeTxn(() async {
+                    await DBService.db.authors.delete(author.id);
+                  });
+                },
+              ),
+            ],
           ),
         );
       },
@@ -78,15 +83,18 @@ class _ArtistsPageState extends State<ArtistsPage> {
   void _addOrEditAuthors({Author? author}) async {
     final isEdit = author != null;
     final nameController = TextEditingController(text: author?.name ?? '');
+    final hometownController = TextEditingController(
+      text: author?.hometown ?? '',
+    );
 
-    final result = await showDialog<Artist?>(
+    final result = await showDialog<Author?>(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(isEdit ? 'Edit Artist' : 'Add Artist'),
+          title: Text(isEdit ? 'Edit Author' : 'Add Author'),
           content: TextField(
             controller: nameController,
-            decoration: const InputDecoration(labelText: 'Artist Name'),
+            decoration: const InputDecoration(labelText: 'Author Name'),
           ),
           actions: [
             TextButton(
@@ -96,15 +104,19 @@ class _ArtistsPageState extends State<ArtistsPage> {
             TextButton(
               onPressed: () {
                 if (nameController.text.trim().isNotEmpty) {
-                  final newArtist =
+                  final newAuthor =
                       isEdit
-                          ? artist.copyWith(
+                          ? author.copyWith(
                             name: nameController.text.trim(),
-                            id: artist.id,
+                            hometown: hometownController.text.trim(),
+                            id: author.id,
                           )
-                          : Artist(name: nameController.text.trim());
+                          : Author(
+                            name: nameController.text.trim(),
+                            hometown: hometownController.text.trim(),
+                          );
 
-                  Navigator.pop(context, newArtist);
+                  Navigator.pop(context, newAuthor);
                 }
               },
               child: const Text('Save'),
@@ -116,7 +128,7 @@ class _ArtistsPageState extends State<ArtistsPage> {
 
     if (result != null) {
       await DBService.db.writeTxn(() async {
-        await DBService.db.artists.put(result);
+        await DBService.db.authors.put(result);
       });
     }
   }
